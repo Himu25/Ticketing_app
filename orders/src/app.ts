@@ -2,6 +2,10 @@ import express from "express";
 import "express-async-errors";
 import cookieSession from "cookie-session";
 import { NotFoundError, currentUser, errorHandler } from "@tiknow/common";
+import { newOrderRouter } from "./routes/new";
+import { getAllOrdersRouter } from "./routes/getAll";
+import { getOrderByIdRouter } from "./routes/getById";
+import { cancelOrderRouter } from "./routes/cancel";
 
 const app = express();
 app.set("trust proxy", true);
@@ -14,6 +18,13 @@ app.use(
 );
 
 app.use(currentUser);
+
+app.use(newOrderRouter);
+app.use(getAllOrdersRouter);
+app.use(getOrderByIdRouter);
+app.use(cancelOrderRouter);
+
+
 
 
 app.all("*", () => {
