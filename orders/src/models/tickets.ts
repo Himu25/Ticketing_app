@@ -1,15 +1,18 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { Order } from "./orders";
 import { orderStatues } from "@tiknow/common";
 
 interface ticketAttr {
   title: string;
   price: string;
+  id: string;
 }
 export interface ticketDoc extends mongoose.Document {
   title: string;
   price: string;
-  isReserved():Promise<boolean>;
+  version: number;
+  isReserved(): Promise<boolean>;
 }
 
 interface ticketModel extends mongoose.Model<ticketDoc> {
@@ -37,8 +40,16 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
+// optimistic concurrency control
+ticketSchema.set("versionKey", "version");
+ticketSchema.plugin(updateIfCurrentPlugin);
+
 ticketSchema.statics.build = (attr: ticketAttr) => {
-  return new Ticket(attr);
+  return new Ticket({
+    title: attr.title,
+    price: attr.price,
+    _id: attr.id,
+  });
 };
 
 ticketSchema.methods.isReserved = async function () {

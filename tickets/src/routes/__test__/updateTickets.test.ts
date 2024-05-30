@@ -3,6 +3,7 @@ import { app } from "../../app";
 import { ROUTE } from "../../constants/route";
 import mongoose from "mongoose";
 import { natsWrapper } from "../../nats-wrapper";
+import { Ticket } from "../../models/tickets";
 
 const createID = () => {
   return new mongoose.Types.ObjectId().toHexString();
@@ -48,6 +49,28 @@ it("give forbidden error if user not own ticket", async () => {
       price: "200",
     })
     .expect(401);
+});
+
+it("reject the edit if it reserved", async () => {
+  const cookie = global.signup();
+  const response = await request(app).post(ROUTE).set("Cookie", cookie).send({
+    title: "Test1",
+    price: "100",
+  });
+  const id = response.body.id;
+  const ticket = await Ticket.findById(id);
+  await ticket?.set({
+    orderID: new mongoose.Types.ObjectId().toHexString(),
+  });
+  await ticket?.save();
+  await request(app)
+    .put(`${ROUTE}/${id}`)
+    .set("Cookie", cookie)
+    .send({
+      title: "Test2",
+      price: "200",
+    })
+    .expect(400);
 });
 
 it("returns status 200 if everythings is ok", async () => {

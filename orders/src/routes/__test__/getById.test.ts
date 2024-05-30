@@ -4,7 +4,11 @@ import { Ticket } from "../../models/tickets";
 import mongoose from "mongoose";
 
 export const createOrder = async (cookie: string[]) => {
-  const ticket = Ticket.build({ title: "Testing", price: "100" });
+  const ticket = Ticket.build({
+    title: "Testing",
+    price: "100",
+    id: new mongoose.Types.ObjectId().toHexString(),
+  });
   await ticket.save();
   const response = await request(app)
     .post("/api/orders")

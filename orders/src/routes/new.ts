@@ -9,6 +9,9 @@ import {
 import { body } from "express-validator";
 import { Ticket } from "../models/tickets";
 import { Order } from "../models/orders";
+import { natsWrapper } from "../nats-wrapper";
+import { OrderCreatedPublisher } from "../events/Publisher/order-created";
+import { Stan } from "node-nats-streaming";
 
 const router = express.Router();
 const EXPIRE_WINDOW_SEC = 15 * 60;
@@ -37,8 +40,21 @@ router.post(
       ticket: ticket,
     });
     await newOrder.save();
+
+    const stan = natsWrapper.client;
+    await new OrderCreatedPublisher(stan).onPublish({
+      id: newOrder.id,
+      version: newOrder.version,
+      status: newOrder.status,
+      expiresAt: newOrder.expiresAt.toISOString(),
+      ticket: {
+        id: newOrder.ticket.id,
+        price: newOrder.ticket.id,
+      },
+      userId: newOrder.userID,
+    });
     res.status(201).json(newOrder);
   }
 );
 
-export {router as newOrderRouter}
+export { router as newOrderRouter };

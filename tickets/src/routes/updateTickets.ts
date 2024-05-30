@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { ROUTE } from "../constants/route";
 import { Ticket } from "../models/tickets";
-import { NotAuthorizedError, NotFoundError, requireAuth } from "@tiknow/common";
+import { BadRequestError, NotAuthorizedError, NotFoundError, requireAuth } from "@tiknow/common";
 import { body } from "express-validator";
 import { natsWrapper } from "../nats-wrapper";
 import { TicketUpdatedPublisher } from "../events/publisher/TicketUpdated";
@@ -20,6 +20,9 @@ router.put(
     if (!ticket) {
       throw new NotFoundError("Ticket not found");
     }
+    if (ticket.orderID) {
+      throw new BadRequestError("Cannot edit a reserved Ticket")
+    }
     if (ticket.userID !== req.currentUser?.id) {
       throw new NotAuthorizedError();
     }
@@ -34,6 +37,7 @@ router.put(
       id: ticket.id,
       price: ticket.price,
       userId: ticket.userID,
+      version: ticket.version
     });
     res.json(ticket);
   }

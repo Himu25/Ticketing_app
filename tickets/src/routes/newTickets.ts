@@ -29,6 +29,7 @@ router.post(
         title: newTicket.title,
         id: newTicket.id,
         price: newTicket.price,
+        version: newTicket.version,
         userId: newTicket.userID,
       });
     res.status(201).json(newTicket);

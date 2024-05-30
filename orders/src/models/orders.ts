@@ -1,4 +1,6 @@
 import { orderStatues } from "@tiknow/common";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
+
 import mongoose from "mongoose";
 import { ticketDoc } from "./tickets";
 
@@ -13,6 +15,7 @@ interface orderDoc extends mongoose.Document {
   userID: string;
   status: orderStatues;
   expiresAt: Date;
+  version: number;
   ticket: ticketDoc;
 }
 
@@ -30,14 +33,14 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: Object.values(orderStatues),
-      default: orderStatues.Created
+      default: orderStatues.Created,
     },
     expiresAt: {
       type: mongoose.Schema.Types.Date,
     },
     ticket: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ticket',
+      ref: "Ticket",
     },
   },
   {
@@ -50,6 +53,9 @@ const orderSchema = new mongoose.Schema(
     },
   }
 );
+
+orderSchema.set("versionKey", "version");
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attr: orderAttr) => {
   return new Order(attr);

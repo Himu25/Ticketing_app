@@ -1,6 +1,8 @@
 import { app } from "./app";
 import mongoose from "mongoose";
 import { natsWrapper } from "./nats-wrapper";
+import { TicketCreatedListener } from "./events/Listener/ticket-created";
+import { TicketUpdatedListener } from "./events/Listener/ticket-updated";
 
 const run = async () => {
   if (!process.env.JWT_KEY) {
@@ -35,7 +37,10 @@ const run = async () => {
     natsWrapper.client.on("close", () => {
       console.log("Nats connection closed");
       process.exit();
-    });
+    })
+    new TicketCreatedListener(natsWrapper.client).listen()
+    new TicketUpdatedListener(natsWrapper.client).listen();
+
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
   } catch (error) {
