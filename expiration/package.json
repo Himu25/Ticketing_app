@@ -1,0 +1,22 @@
+{
+  "name": "expiration",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev --poll src/index.ts"
+  },
+  "dependencies": {
+    "@tiknow/common": "^1.0.10",
+    "@types/express": "^4.17.21",
+    "bull": "^4.12.9",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "node-nats-streaming": "^0.3.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -14,7 +14,7 @@ import { OrderCreatedPublisher } from "../events/Publisher/order-created";
 import { Stan } from "node-nats-streaming";
 
 const router = express.Router();
-const EXPIRE_WINDOW_SEC = 15 * 60;
+const EXPIRE_WINDOW_SEC = 120;
 
 router.post(
   "/api/orders",

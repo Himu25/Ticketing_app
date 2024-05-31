@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { natsWrapper } from "./nats-wrapper";
 import { TicketCreatedListener } from "./events/Listener/ticket-created";
 import { TicketUpdatedListener } from "./events/Listener/ticket-updated";
+import { OrderExpiredListener } from "./events/Listener/order-expired";
 
 const run = async () => {
   if (!process.env.JWT_KEY) {
@@ -40,6 +41,7 @@ const run = async () => {
     })
     new TicketCreatedListener(natsWrapper.client).listen()
     new TicketUpdatedListener(natsWrapper.client).listen();
+    new OrderExpiredListener(natsWrapper.client).listen();
 
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());

@@ -9,6 +9,7 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
   async onMessage(data: OrderCancelledEvent["data"], msg: Message) {
     const ticket = await Ticket.findById(data.ticket.id);
     if (!ticket) {
+      msg.ack();
       throw new Error("Ticket not Found");
     }
     ticket.set({

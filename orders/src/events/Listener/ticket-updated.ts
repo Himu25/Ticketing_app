@@ -11,6 +11,7 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     const ticket = await Ticket.findOne({ _id: id, version: version - 1 });
 
     if (!ticket) {
+      msg.ack();
       throw new Error("Ticket not found");
     }
     ticket.set({
