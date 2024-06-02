@@ -11,10 +11,9 @@ import { Ticket } from "../models/tickets";
 import { Order } from "../models/orders";
 import { natsWrapper } from "../nats-wrapper";
 import { OrderCreatedPublisher } from "../events/Publisher/order-created";
-import { Stan } from "node-nats-streaming";
 
 const router = express.Router();
-const EXPIRE_WINDOW_SEC = 120;
+const EXPIRE_WINDOW_SEC = 30;
 
 router.post(
   "/api/orders",
@@ -49,10 +48,12 @@ router.post(
       expiresAt: newOrder.expiresAt.toISOString(),
       ticket: {
         id: newOrder.ticket.id,
-        price: newOrder.ticket.id,
+        price: newOrder.ticket.price,
       },
       userId: newOrder.userID,
     });
+    console.log(newOrder);
+    
     res.status(201).json(newOrder);
   }
 );
