@@ -99,7 +99,7 @@ This is a microservices-based ticketing platform where users can create and sell
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/ticketing-app.git
+   git clone https://github.com/Himu25/ticketing-app.git
    cd ticketing-app
    ```
 2. Install dependencies:
