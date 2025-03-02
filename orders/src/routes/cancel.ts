@@ -16,6 +16,8 @@ router.delete(
   requireAuth,
   async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.id).populate("ticket");
+    console.log(order);
+
     if (!order) {
       throw new NotFoundError("Ticket not found");
     }

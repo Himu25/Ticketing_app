@@ -1,4 +1,5 @@
 export default function InputBox({
+  placeholder,
   label,
   name,
   value,
@@ -16,6 +17,7 @@ export default function InputBox({
         </label>
         <div className="mt-2">
           <input
+            placeholder={placeholder}
             id={name}
             value={value}
             onChange={onChange}

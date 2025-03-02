@@ -23,15 +23,16 @@ router.post(
       price,
       userID: req.currentUser!.id,
     });
+    console.log("🚀 ~ title, price:", title, price);
     await newTicket.save();
-      const stan = natsWrapper.client;
-      await new TicketCreatedPublisher(stan).onPublish({
-        title: newTicket.title,
-        id: newTicket.id,
-        price: newTicket.price,
-        version: newTicket.version,
-        userId: newTicket.userID,
-      });
+    const stan = natsWrapper.client;
+    await new TicketCreatedPublisher(stan).onPublish({
+      title: newTicket.title,
+      id: newTicket.id,
+      price: newTicket.price,
+      version: newTicket.version,
+      userId: newTicket.userID,
+    });
     res.status(201).json(newTicket);
   }
 );

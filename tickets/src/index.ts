@@ -35,7 +35,7 @@ const run = async () => {
     );
     console.log("Nats Connected");
     new OrderCreatedListener(natsWrapper.client).listen();
-    new OrderCancelledListener(natsWrapper.client).listen();  
+    new OrderCancelledListener(natsWrapper.client).listen();
     natsWrapper.client.on("close", () => {
       console.log("Nats connection closed");
       process.exit();

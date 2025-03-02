@@ -13,7 +13,7 @@ import { natsWrapper } from "../nats-wrapper";
 import { OrderCreatedPublisher } from "../events/Publisher/order-created";
 
 const router = express.Router();
-const EXPIRE_WINDOW_SEC = 30;
+const EXPIRE_WINDOW_SEC = 300;
 
 router.post(
   "/api/orders",
@@ -53,7 +53,7 @@ router.post(
       userId: newOrder.userID,
     });
     console.log(newOrder);
-    
+
     res.status(201).json(newOrder);
   }
 );

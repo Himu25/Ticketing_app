@@ -1,16 +1,15 @@
 import TicketCard from "@/components/TicketCard";
-// import SellTicketForm from "@/components/SellTicketForm";
 import { buildClient } from "@/services/build-client";
 
 async function getData() {
   const client = buildClient();
-  const res = await client.get("/api/tickets/");
+  const res = await client.get("/api/tickets/getByUser");
   console.log("🚀 ~ getData ~ res:", res.data);
   return res.data;
 }
 
 export default async function Page() {
-  const { Tickets: tickets } = await getData();
+  const { tickets } = await getData();
   return (
     <div className="space-y-6 p-5 mt-16">
       {tickets.length === 0 ? (
